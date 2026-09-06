@@ -1,0 +1,9 @@
+Security and hardening release.
+
+The VirusTotal API key is now encrypted with a hardware backed key from the Android Keystore instead of being stored in plain text. An existing key is migrated automatically on first launch.
+
+The settings store that holds the key is excluded from cloud backup and from device to device transfer, so the credential never leaves the device.
+
+HTTP logging is limited to debug builds and the API key header is redacted, so it can no longer end up in a device log or bug report.
+
+Files shared from other apps are copied into the cache under a sanitized file name.

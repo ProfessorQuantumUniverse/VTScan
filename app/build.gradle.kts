@@ -17,8 +17,8 @@ android {
         applicationId = "com.quantum_prof.vtscansuite"
         minSdk = 30
         targetSdk = 36
-        versionCode = 4
-        versionName = "2.2"
+        versionCode = 5
+        versionName = "2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,6 +39,8 @@ android {
     }
     buildFeatures {
         compose = true
+        // Wird für BuildConfig.DEBUG gebraucht (HTTP-Logging nur im Debug-Build).
+        buildConfig = true
     }
 
     dependenciesInfo {

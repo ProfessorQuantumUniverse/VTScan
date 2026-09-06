@@ -1,6 +1,7 @@
 // di/NetworkModule.kt
 package com.quantum_prof.vtscansuite.di
 
+import com.quantum_prof.vtscansuite.BuildConfig
 import com.quantum_prof.vtscansuite.data.remote.VTScanApiService
 import dagger.Module
 import dagger.Provides
@@ -31,16 +32,23 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        val logging = HttpLoggingInterceptor().apply {
-            // HEADERS statt BODY: verhindert das Puffern großer Datei-Uploads (Performance + korrekter Fortschritt)
-            level = HttpLoggingInterceptor.Level.HEADERS
-        }
-        return OkHttpClient.Builder()
-            .addInterceptor(logging)
+        val builder = OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(120, TimeUnit.SECONDS) // Uploads können dauern
-            .build()
+
+        // Nur in Debug-Builds mitloggen: in einem Release-Build landete sonst der
+        // "x-apikey"-Header des Nutzers im Logcat (und damit in jedem Bug-Report).
+        if (BuildConfig.DEBUG) {
+            val logging = HttpLoggingInterceptor().apply {
+                // HEADERS statt BODY: verhindert das Puffern großer Datei-Uploads (Performance + korrekter Fortschritt)
+                level = HttpLoggingInterceptor.Level.HEADERS
+                redactHeader("x-apikey")
+            }
+            builder.addInterceptor(logging)
+        }
+
+        return builder.build()
     }
 
     @Provides

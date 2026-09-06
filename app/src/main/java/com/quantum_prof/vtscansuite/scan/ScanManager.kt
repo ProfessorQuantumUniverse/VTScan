@@ -187,11 +187,27 @@ class ScanManager @Inject constructor(
         return name ?: uri.lastPathSegment
     }
 
+    /**
+     * Kopiert die gewählte Datei in ein eigenes Unterverzeichnis des Caches.
+     * Der Dateiname stammt aus einem fremden ContentProvider und wird deshalb
+     * bereinigt – sonst könnte ein Name wie "../databases/x" ausserhalb des
+     * Cache-Verzeichnisses landen.
+     */
     private fun copyToCache(uri: Uri, name: String): File {
-        val tempFile = File(context.cacheDir, name)
+        val dir = File(context.cacheDir, "scan_uploads").apply { mkdirs() }
+        val tempFile = File(dir, sanitizeFileName(name))
         context.contentResolver.openInputStream(uri)?.use { input ->
             tempFile.outputStream().use { output -> input.copyTo(output) }
         } ?: throw IllegalStateException("Unable to read the selected file.")
         return tempFile
+    }
+
+    /** Entfernt Pfadanteile und Sonderzeichen aus einem vom Nutzer/Provider gelieferten Namen. */
+    private fun sanitizeFileName(name: String): String {
+        val base = name.substringAfterLast('/').substringAfterLast('\\')
+            .replace(Regex("[^A-Za-z0-9._-]"), "_")
+            .trimStart('.')
+            .take(120)
+        return base.ifBlank { "upload" }
     }
 }

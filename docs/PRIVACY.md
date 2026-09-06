@@ -1,6 +1,6 @@
 # Privacy Policy for Veto
 
-Last updated: 11 July 2026
+Last updated: 6 September 2026
 
 Veto is an open source Android app that lets you scan files, links and
 installed apps using the VirusTotal service. This policy explains what happens
@@ -32,6 +32,12 @@ never sent anywhere except to VirusTotal as needed to perform a scan:
 * Your VirusTotal API key
 * Your saved scans
 * Your app settings
+
+Your API key is treated as a credential. It is encrypted with an AES-256-GCM key
+held in the Android Keystore, which never leaves the device, and the settings
+store that holds it is excluded from cloud backup and from device to device
+transfer. Your key therefore stays on the device you entered it on. If you
+restore the app onto a new device you will be asked for the key again.
 
 You can remove this data at any time by clearing the app's storage or
 uninstalling the app.

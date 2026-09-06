@@ -124,13 +124,13 @@ cd VTScan
 
 Alternatively, open the root directory inside Android Studio and select the Run configuration.
 
-On the initial launch, enter your VirusTotal API key in the introduction setup screen. The key is stored locally on your device. Free API keys are typically subject to a limit of four lookups per minute.
+On the initial launch, enter your VirusTotal API key in the introduction setup screen. The key is stored locally on your device, encrypted with an AES-256-GCM key from the Android Keystore, and excluded from cloud backup and device to device transfer. Free API keys are typically subject to a limit of four lookups per minute.
 
 ---
 
 ## Privacy Policy
 
-The application communicates exclusively with the VirusTotal API using the credentials you provide. Uploaded files, submitted URLs, and dynamic results are sent directly to VirusTotal's servers. The API key is stored locally on your device. Veto does not collect analytics data and contains no advertising SDKs.
+The application communicates exclusively with the VirusTotal API using the credentials you provide. Uploaded files, submitted URLs, and dynamic results are sent directly to VirusTotal's servers. The API key is stored locally on your device, encrypted with an AES-256-GCM key from the Android Keystore, and is excluded from cloud backup and device to device transfer, so it never leaves the device. HTTP logging is limited to debug builds and redacts the key header. Veto does not collect analytics data and contains no advertising SDKs.
 
 ---
 

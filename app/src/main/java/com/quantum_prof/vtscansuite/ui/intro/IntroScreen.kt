@@ -20,6 +20,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,10 +35,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -57,6 +61,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.quantum_prof.vtscansuite.ui.components.GradientButton
@@ -220,6 +227,7 @@ private fun ApiKeyOnboarding(
     val context = LocalContext.current
     val view = LocalView.current
     var key by remember { mutableStateOf("") }
+    var keyVisible by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -248,10 +256,25 @@ private fun ApiKeyOnboarding(
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(18.dp),
+            // Wie ein Passwort behandeln: standardmäßig verdeckt und ohne
+            // Autokorrektur, damit die Tastatur den Key nicht lernt oder vorschlägt.
+            visualTransformation = if (keyVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                autoCorrectEnabled = false
+            ),
             trailingIcon = {
-                if (key.isNotEmpty()) {
-                    IconButton(onClick = { key = "" }) {
-                        Icon(Icons.Default.Clear, contentDescription = "Clear")
+                Row {
+                    IconButton(onClick = { keyVisible = !keyVisible }) {
+                        Icon(
+                            if (keyVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                            contentDescription = if (keyVisible) "Hide key" else "Show key"
+                        )
+                    }
+                    if (key.isNotEmpty()) {
+                        IconButton(onClick = { key = "" }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear")
+                        }
                     }
                 }
             }
